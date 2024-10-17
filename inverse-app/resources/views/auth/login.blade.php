@@ -22,9 +22,19 @@
 
             <form method="POST" action="{{ route('login') }}">
                 @csrf
+
+                <!--Sign up-->
+                <div class="relative">
+                    <span class="text-gray-600 text-sm">
+                        {{ __('Don’t have an account yet?') }} 
+                        <a href="{{ route('register') }}" class="underline text-indigo-600 hover:text-red-500">
+                            {{ __('Sign Up') }}
+                        </a>
+                    </span>
+                </div>
                 
                 <!-- Email Address -->
-                <div class="relative">
+                <div class="relative mt-4">
                     <x-input-label for="email" :value="__('Email')" />
                     <x-text-input id="email" class="block mt-1 w-full bg-gray-100 border-none focus:ring-0 focus:outline-none" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
                     <div class="absolute inset-x-0 bottom-0 h-0.5 bg-black"></div>
