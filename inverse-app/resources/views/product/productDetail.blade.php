@@ -24,18 +24,18 @@
 
                     <!-- Display Available Stock -->
                     <p class="text-gray-600 mt-4">Available Stock: <span class="font-bold">{{ $product->stock }}</span></p>
-                    
-                    <!-- Quantity Selection -->
-                    <div class="flex items-center mt-4 mb-6"> <!-- Add mb-6 for bottom margin -->
-                        <label for="quantity" class="mr-4">Quantity:</label>
-                        <input type="number" id="quantity" name="quantity" value="1" min="1" max="{{ $product->stock }}" class="border border-gray-300 rounded-lg py-2 px-4 w-20 focus:outline-none focus:ring focus:ring-blue-300">
-                    </div>
-
-                    @csrf
-                    <button type="submit" class="w-full bg-black text-white py-2 rounded-md hover:bg-gray-800 transition">
-                        Add to Cart
-                    </button>
-
+                    <form action="{{ route('cart.add') }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="product_id" value="{{ $product->id }}">
+                        <div class="flex items-center mt-4 mb-6"> 
+                            <label for="quantity" class="mr-4">Quantity:</label>
+                            <input type="number" id="quantity" name="quantity" value="1" min="1" max="{{ $product->stock }}" class="border border-gray-300 rounded-lg py-2 px-4 w-20 focus:outline-none focus:ring focus:ring-blue-300">
+                        </div>
+                        
+                        <button type="submit" class="w-full bg-black text-white py-2 rounded-md hover:bg-gray-800 transition">
+                            Add to Cart
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>

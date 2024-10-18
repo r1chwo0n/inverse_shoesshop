@@ -1,4 +1,8 @@
 *
 !private/
 !public/
+# Ignore everything in the storage directory
+/storage/*
+# But not the public folder
+!/storage/app/public/
 !.gitignore

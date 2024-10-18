@@ -9,7 +9,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-
 Route::get('/product', function () {
     return view('product');
 })->middleware(['auth', 'verified'])->name('product');
@@ -22,18 +21,27 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    Route::get('/cart/{id}', [CartController::class, 'show'])->name('cart.show');
-    Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
-    Route::post('/cart/{productId}', [CartController::class, 'store'])->name('cart.store');
-    Route::put('/cart/{cartId}', [CartController::class, 'update'])->name('cart.update');
-    Route::delete('/cart/{cartId}', [CartController::class, 'destroy'])->name('cart.destroy');
-});
 
+
+
+    // Cart Routes
+    Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+    
+    // Add product to cart
+    Route::post('/cart', [CartController::class, 'store'])->name('cart.add');
+
+    
+    // Update cart item
+    Route::put('/cart/{cartId}', [CartController::class, 'update'])->name('cart.update');
+    
+    // Delete cart item
+    Route::delete('/cart/{cartId}', [CartController::class, 'destroy'])->name('cart.destroy');
+    
+});
 
 // Define routes for each shoe type page
 Route::get('/product/chuck70', [ProductController::class, 'showChuck70'])->name('chuck70');
@@ -43,8 +51,5 @@ Route::get('/product/elevation', [ProductController::class, 'showElevation'])->n
 
 Route::get('/product', [ProductController::class, 'index'])->name('product');
 Route::get('/product/{id}', [ProductController::class, 'showProductDetail'])->name('productDetail');
-
-
-
 
 require __DIR__.'/auth.php';

@@ -69,7 +69,7 @@ class ProductController extends Controller
 
     public function addToCart(Request $request, $productId)
     {
-        $request->validate([
+        $request  ->validate([
             'quantity' => 'required|integer|min:1',
         ]);
 
