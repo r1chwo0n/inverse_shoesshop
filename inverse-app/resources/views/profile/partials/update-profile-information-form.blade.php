@@ -24,6 +24,38 @@
         </div>
 
         <div>
+            <x-input-label for="firstname" :value="__('First Name')" />
+            <x-text-input id="firstname" name="firstname" type="text" class="mt-1 block w-full" :value="old('firstname', $user->firstname)" required autofocus autocomplete="firstname" />
+            <x-input-error class="mt-2" :messages="$errors->get('firstname')" />
+        </div>
+
+        <div>
+            <x-input-label for="lastname" :value="__('Last Name')" />
+            <x-text-input id="lastname" name="lastname" type="text" class="mt-1 block w-full" :value="old('lastname', $user->lastname)" required autofocus autocomplete="lastname" />
+            <x-input-error class="mt-2" :messages="$errors->get('lastname')" />
+        </div>
+
+        <div>
+            <x-input-label for="phone_number" :value="__('Phone Number')" />
+            <x-text-input id="phone_number" name="phone_number" type="text" class="mt-1 block w-full" :value="old('phone_number', $user->phone_number)" required autofocus autocomplete="phone_number" />
+            <x-input-error class="mt-2" :messages="$errors->get('phone_number')" />
+        </div>
+
+        <div>
+            <x-input-label for="gender" :value="__('Gender')" />
+            <div class="flex items-center mt-2">
+                <input type="radio" id="male" name="gender" value="male" class="mr-2" {{ old('gender', $user->gender) === 'male' ? 'checked' : '' }}>
+                <label for="male">{{ __('Male') }}</label>
+            </div>
+            <div class="flex items-center mt-2">
+                <input type="radio" id="female" name="gender" value="female" class="mr-2" {{ old('gender', $user->gender) === 'female' ? 'checked' : '' }}>
+                <label for="female">{{ __('Female') }}</label>
+            </div>
+            <x-input-error class="mt-2" :messages="$errors->get('gender')" />
+        </div>
+
+
+        <div>
             <x-input-label for="email" :value="__('Email')" />
             <x-text-input id="email" name="email" type="email" class="mt-1 block w-full" :value="old('email', $user->email)" required autocomplete="username" />
             <x-input-error class="mt-2" :messages="$errors->get('email')" />
@@ -46,6 +78,7 @@
                 </div>
             @endif
         </div>
+
 
         <div class="flex items-center gap-4">
             <x-primary-button>{{ __('Save') }}</x-primary-button>
