@@ -7,55 +7,64 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <!-- ใช้ Flexbox ในการจัดรายการสินค้าและสรุปรายการ -->
             <div class="flex flex-col lg:flex-row lg:space-x-6">
-                <!-- ส่วนรายการสินค้า (ทางซ้าย) -->
                 <div class="w-full lg:w-2/3">
-                    <div class="bg-white shadow-sm sm:rounded-lg mb-6">
-                        <div class="p-6">
-                            <div class="flex justify-between items-center">
-                                <!-- รูปภาพสินค้าและรายละเอียด -->
-                                <div class="flex items-center space-x-4">
-                                    <img src="{{ asset('images/shoe.png') }}" alt="Chuck Taylor All Star Sketch" class="w-24 h-24 object-cover">
-                                    <div>
-                                        <a href="#" class="text-lg font-semibold text-gray-900 hover:text-gray-700">Chuck Taylor All Star Sketch</a>
-                                        <p class="text-sm text-gray-600"><strong>สี:</strong> NAVY</p>
-                                        <p class="text-sm text-gray-600"><strong>ขนาด:</strong> M 10 - W 12</p>
-                                    </div>
-                                </div>
+                    @if($cartItems->isEmpty())
+                        <p>ตะกร้าของคุณว่างเปล่า</p>
+                    @else
+                        @foreach($cartItems as $item)
+                            <div id="cart-item-{{ $item->id }}" class="bg-white shadow-sm sm:rounded-lg mb-6">
+                                <div class="p-6">
+                                    <div class="flex justify-between items-center">
+                                        <div class="flex items-center space-x-4">
+                                            <img src="{{ asset('storage/' . $item->product->image_path) }}" alt="{{ $item->product->name }}" class="w-24 h-24 object-cover">
+                                            <div>
+                                                <a href="{{ route('cart.show', $item->product->id) }}" class="text-lg font-semibold text-gray-900 hover:text-gray-700">
+                                                    {{ $item->product->name }}
+                                                </a>
+                                                <p class="text-sm text-gray-600"><strong>สี:</strong> {{ $item->product->color }}</p>
+                                                <p class="text-sm text-gray-600"><strong>ขนาด:</strong> {{ $item->product->size }}</p>
+                                                <p class="product-price text-gray-900 font-semibold">
+                                                    {{ number_format($item->product->price, 2) }} THB
+                                                </p>
+                                            </div>
+                                        </div>
 
-                                <!-- ราคา, ปุ่มเพิ่ม/ลดจำนวน, ปุ่มแก้ไข/ลบ -->
-                                <div class="flex items-center space-x-2">
-                                    <!-- ปุ่มเพิ่ม/ลดจำนวนสินค้า -->
-                                    <button class="bg-gray-200 px-3 py-1 rounded-lg text-gray-800" onclick="decreaseQuantity()">-</button>
-                                    <div class="flex items-center justify-center">
-                                        <input 
-                                            type="number" 
-                                            id="quantity" 
-                                            class="w-16 text-center border border-gray-300 rounded-lg h-10" 
-                                            value="1" 
-                                            min="1" 
-                                            max="10" 
-                                            readonly>
+                                        <div class="flex items-center space-x-2">
+                                            <form action="{{ route('cart.update', $item->id) }}" method="POST">
+                                                @csrf
+                                                @method('PUT')
+                                                <button type="button" class="bg-gray-200 px-3 py-1 rounded-lg text-gray-800" onclick="decreaseQuantity({{ $item->id }}, event)">-</button>
+                                                <input 
+                                                    type="number" 
+                                                    id="quantity_{{ $item->id }}" 
+                                                    name="quantity" 
+                                                    class="w-16 text-center border border-gray-300 rounded-lg h-10" 
+                                                    value="{{ $item->quantity }}" 
+                                                    min="1" 
+                                                    max="{{ $item->product->stock }}" 
+                                                    readonly>
+                                                <button type="button" class="bg-gray-200 px-3 py-1 rounded-lg text-gray-800" onclick="increaseQuantity({{ $item->id }}, event)">+</button>
+                                            </form>
+                                            <button type="button" class="text-red-500 hover:underline" onclick="deleteItem({{ $item->id }})">ลบ</button>
+                                        </div>
                                     </div>
-                                    <button class="bg-gray-200 px-3 py-1 rounded-lg text-gray-800" onclick="increaseQuantity()">+</button>
-
-                                    <!-- ปุ่มแก้ไขและลบ -->
-                                    <a href="#" class="text-blue-500 hover:underline">แก้ไข</a>
-                                    <a href="#" class="text-red-500 hover:underline">ลบ</a>
                                 </div>
                             </div>
-                        </div>
-                    </div>
+                        @endforeach
+                    @endif
                 </div>
 
-                <!-- ส่วนสรุปรายการ (ทางขวา) -->
                 <div class="w-full lg:w-1/3">
                     <div class="bg-white shadow-sm sm:rounded-lg p-6">
                         <h3 class="text-lg font-semibold text-gray-800">สรุปรายการ</h3>
                         <div class="flex justify-between mt-4">
                             <p class="text-gray-600">ยอดรวมทั้งหมด:</p>
-                            <p class="text-gray-900 font-semibold">2,430.00 THB</p>
+                            <p class="text-gray-900 font-semibold total-price">
+                                {{ number_format($cartItems->sum(function($item) {
+                                    return $item->product->price * $item->quantity;
+                                }), 2) }} THB
+                            </p>
                         </div>
                         <div class="flex justify-between mt-2">
                             <p class="text-gray-600">ค่าจัดส่ง:</p>
@@ -64,15 +73,13 @@
                         <hr class="my-4">
                         <div class="flex justify-between">
                             <p class="text-gray-800 font-semibold">ยอดรวมสุทธิ:</p>
-                            <p class="text-lg font-bold text-gray-900">2,430.00 THB</p>
+                            <p class="text-lg font-bold text-gray-900 net-total">
+                                {{ number_format($cartItems->sum(function($item) {
+                                    return $item->product->price * $item->quantity;
+                                }), 2) }} THB
+                            </p>
                         </div>
 
-                        <!-- ฟิลด์รหัสส่วนลด -->
-                        <div class="mt-4">
-                            <input type="text" class="w-full border border-gray-300 rounded-lg p-2" placeholder="ใส่รหัสส่วนลด">
-                        </div>
-
-                        <!-- ปุ่มชำระเงิน -->
                         <button class="w-full mt-4 bg-black text-white py-2 rounded-lg hover:bg-gray-800">ชำระเงิน</button>
                     </div>
                 </div>
@@ -82,23 +89,84 @@
 
     <!-- ฟังก์ชัน JavaScript สำหรับเพิ่ม/ลดจำนวน -->
     <script>
-        function increaseQuantity() {
-            const quantityInput = document.getElementById('quantity');
+        function increaseQuantity(cartId, event) {
+            event.preventDefault(); // Prevent form submission
+            const quantityInput = document.getElementById('quantity_' + cartId);
             const maxStock = parseInt(quantityInput.max);
             let currentValue = parseInt(quantityInput.value);
 
             if (currentValue < maxStock) {
                 quantityInput.value = currentValue + 1;
+                updateCartQuantity(cartId, quantityInput.value); // Update quantity in DB
             }
         }
 
-        function decreaseQuantity() {
-            const quantityInput = document.getElementById('quantity');
+        function decreaseQuantity(cartId, event) {
+            event.preventDefault(); // Prevent form submission
+            const quantityInput = document.getElementById('quantity_' + cartId);
             let currentValue = parseInt(quantityInput.value);
 
             if (currentValue > 1) {
                 quantityInput.value = currentValue - 1;
+                updateCartQuantity(cartId, quantityInput.value); // Update quantity in DB
             }
+        }
+
+        function updateCartQuantity(cartId, quantity) {
+            const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+            fetch(`/cart/${cartId}`, {
+                method: 'PUT',
+                headers: {
+                    'X-CSRF-TOKEN': token,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ quantity: quantity }) // Send the new quantity to the server
+            })
+            .then(response => {
+                if (response.ok) {
+                    updateTotalPrice(); // Update total price after successful update
+                } else {
+                    console.error('Error updating quantity');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        function updateTotalPrice() {
+            let totalPrice = 0;
+            const cartItems = document.querySelectorAll('[id^="cart-item-"]');
+            cartItems.forEach(item => {
+                const cartId = item.id.split('-')[2];
+                const quantityInput = document.getElementById('quantity_' + cartId);
+                const quantity = parseInt(quantityInput.value);
+                const price = parseFloat(item.querySelector('.product-price').textContent.replace(' THB', '').replace(',', ''));
+                totalPrice += price * quantity;
+            });
+            document.querySelector('.total-price').textContent = totalPrice.toFixed(2) + " THB";
+            document.querySelector('.net-total').textContent = totalPrice.toFixed(2) + " THB"; // Update net total
+        }
+
+        function deleteItem(cartId) {
+            const itemElement = document.getElementById('cart-item-' + cartId);
+            const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+            fetch(`/cart/${cartId}`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': token,
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then(response => {
+                if (response.ok) {
+                    itemElement.remove(); // Remove the item from the DOM
+                    updateTotalPrice(); // Update total price after deletion
+                } else {
+                    console.error('Error deleting item');
+                }
+            })
+            .catch(error => console.error('Error:', error));
         }
     </script>
 </x-app-layout>
