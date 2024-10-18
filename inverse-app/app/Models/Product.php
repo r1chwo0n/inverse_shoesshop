@@ -17,7 +17,7 @@ class Product extends Model
         'category_id',
         'price',
         'color',
-        'stock', // Stock is now directly a product attribute
+        'stock', 
         'image_path',
     ];
 
