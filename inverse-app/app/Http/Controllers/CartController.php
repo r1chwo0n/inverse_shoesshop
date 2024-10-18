@@ -60,7 +60,7 @@ class CartController extends Controller
         $cartItem->quantity = $request->quantity;
         $cartItem->save();
 
-        return Redirect::route('cart')->with('success', 'Quantity updated');
+        return response()->json(['success' => true]); // ส่ง response กลับไปที่ JavaScript
     }
 
     /** ลบสินค้าในรถเข็น */
@@ -69,6 +69,6 @@ class CartController extends Controller
         $cartItem = Cart::findOrFail($cartId);
         $cartItem->delete();
 
-        return Redirect::route('cart')->with('success', 'Deleted');
+        return response()->json(['success' => true]); // Return JSON response
     }
 }
