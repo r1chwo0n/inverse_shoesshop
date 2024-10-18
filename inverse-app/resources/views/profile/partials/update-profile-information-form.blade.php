@@ -42,18 +42,20 @@
         </div>
 
         <div>
-            <x-input-label for="gender" :value="__('Gender')" />
-            <div class="flex items-center mt-2">
-                <input type="radio" id="male" name="gender" value="male" class="mr-2" {{ old('gender', $user->gender) === 'male' ? 'checked' : '' }}>
-                <label for="male">{{ __('Male') }}</label>
-            </div>
-            <div class="flex items-center mt-2">
-                <input type="radio" id="female" name="gender" value="female" class="mr-2" {{ old('gender', $user->gender) === 'female' ? 'checked' : '' }}>
-                <label for="female">{{ __('Female') }}</label>
-            </div>
-            <x-input-error class="mt-2" :messages="$errors->get('gender')" />
+            <x-input-label for="birthdate" :value="__('Birthdate')" />
+            <x-text-input id="birthdate" class="block mt-1 w-full bg-gray-100 border-none focus:ring-0 focus:outline-none" type="date" name="birthdate" :value="old('birthdate', $user->birthdate)" required />
+            <!-- <div class="absolute inset-x-0 bottom-0 h-0.5 bg-black"></div> -->
+            <x-input-error :messages="$errors->get('birthdate')" />
         </div>
 
+        <div>
+            <x-input-label for="gender" :value="__('Gender')" />
+            <select id="gender" name="gender" class="block mt-1 w-full bg-gray-100 border-none focus:ring-0 focus:outline-none px-2 py-2" required>
+                <option value="male" {{ $user->gender === 'male' ? 'selected' : '' }}>Male</option>
+                <option value="female" {{ $user->gender === 'female' ? 'selected' : '' }}>Female</option>
+            </select>
+            <x-input-error :messages="$errors->get('gender')" />
+        </div>
 
         <div>
             <x-input-label for="email" :value="__('Email')" />
@@ -83,7 +85,7 @@
         <div class="flex items-center gap-4">
             <x-primary-button>{{ __('Save') }}</x-primary-button>
 
-            @if (session('status') === 'profile-updated')
+            @if (session('status') === 'password-updated')
                 <p
                     x-data="{ show: true }"
                     x-show="show"

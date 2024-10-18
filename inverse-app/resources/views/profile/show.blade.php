@@ -20,19 +20,20 @@
                     <p><strong>{{ __('Last Name:') }}</strong> {{ Auth::user()->lastname }}</p>
                     <p><strong>{{ __('Phone Number:') }}</strong> {{ Auth::user()->phone_number }}</p>
                     <p><strong>{{ __('Email Address:') }}</strong> {{ Auth::user()->email }}</p>
+                    <p><strong>{{ __('Birthdate:') }}</strong> {{ \Carbon\Carbon::parse(Auth::user()->birthdate)->format('d F Y') }}</p>
                     <p><strong>{{ __('Gender:') }}</strong></p>
-                        <div class="flex space-x-4 mt-1">
-                            <span class="inline-flex">
-                                <span class="px-4 py-2 {{ Auth::user()->gender == 'male' ? 'bg-blue-500 text-white' : 'bg-gray-300 text-gray-600' }} rounded-full">
-                                    {{ __('Male') }}
-                                </span>
+                    <div class="flex space-x-4 mt-1">
+                        <span class="inline-flex">
+                            <span class="px-4 py-2 {{ Auth::user()->gender == 'male' ? 'bg-gray-800 text-white' : 'bg-gray-300 text-gray-600' }} rounded-full">
+                                {{ __('Male') }}
                             </span>
-                            <span class="inline-flex">
-                                <span class="px-4 py-2 {{ Auth::user()->gender == 'female' ? 'bg-pink-500 text-white' : 'bg-gray-300 text-gray-600' }} rounded-full">
-                                    {{ __('Female') }}
-                                </span>
+                        </span>
+                        <span class="inline-flex">
+                            <span class="px-4 py-2 {{ Auth::user()->gender == 'female' ? 'bg-gray-800 text-white' : 'bg-gray-300 text-gray-600' }} rounded-full">
+                                {{ __('Female') }}
                             </span>
-                        </div>
+                        </span>
+                    </div>                    
                 </div>
                 
                 <!-- Edit Profile Button -->
@@ -41,6 +42,7 @@
                         {{ __('Edit Profile') }}
                     </x-primary-button>
                 </div>
+                <p class="mt-4"><strong>{{ __('Joined Date:') }}</strong> {{ \Carbon\Carbon::parse(Auth::user()->created_at)->format('d F Y') }}</p>
             </div>
 
             <!-- Address Information Section -->
