@@ -15,11 +15,11 @@ class CartController extends Controller
     public function index(): View
     {
         $user_id = Auth::id();
-        $cartItem =Cart::with('product')
+        $cartItems =Cart::with('product')
             ->where('user_id', $user_id)
             ->get();
 
-        return view('cart.index', compact('CartItems'));
+        return view('cart.index', compact('cartItems'));
     }
 
     /** อัพเดทจำนวนสินค้าในรถเข็น */
@@ -28,9 +28,9 @@ class CartController extends Controller
         $request->validate([
             'quantity'=>'required|integermin:1'
         ]);
-        $cartItem = Cart::findOrFail($cartId);
-        $cartItem->quantity = $request->quantity;
-        $cartItem->save;
+        $cartItems = Cart::findOrFail($cartId);
+        $cartItems->quantity = $request->quantity;
+        $cartItems->save;
 
         return Redirect::route('cart.index')->with('success', 'quantity updated');
     }
@@ -38,8 +38,8 @@ class CartController extends Controller
     /** ลบสินค้าในรถเข็น */
     public function destroy($cartId)
     {
-        $cartItem=Cart::findOrFail($cartId);
-        $cartItem->delete();
+        $cartItems=Cart::findOrFail($cartId);
+        $cartItems->delete();
 
         return Redirect::route('cart.index')->with('success', 'deleted');
     }
