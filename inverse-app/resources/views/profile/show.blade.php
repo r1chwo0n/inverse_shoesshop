@@ -50,6 +50,11 @@
                 <div class="max-w-xl">
                     <h3 class="font-semibold text-gray-900">{{ __('Address Information') }}</h3>
                     <p>{{ __('Your address information will be displayed here.') }}</p>
+                    <div class="max-w-xl mt-6">
+                    <x-primary-button as="a" href="{{ route('addresses.create') }}">
+                        {{ __('Add New Address') }}
+                    </x-primary-button>
+                </div>
                 </div>
             </div>
 
