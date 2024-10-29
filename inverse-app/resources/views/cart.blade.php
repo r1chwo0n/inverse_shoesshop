@@ -80,7 +80,7 @@
                             </p>
                         </div>
 
-                        <button class="w-full mt-4 bg-black text-white py-2 rounded-lg hover:bg-gray-800">ชำระเงิน</button>
+                        <a href="{{ route('summary') }}" class="w-full mt-4 bg-black text-white py-2 rounded-lg hover:bg-gray-800 text-center inline-block">ชำระเงิน</a>
                     </div>
                 </div>
             </div>
