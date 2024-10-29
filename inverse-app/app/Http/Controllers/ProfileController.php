@@ -16,9 +16,9 @@ class ProfileController extends Controller
      */
     public function show(Request $request): View
     {
-        return view('profile.show', [
-            'user' => $request->user(),
-        ]);
+        $user = Auth::user();
+        $addresses = $user->addresses; // Retrieve the first address if it exists
+        return view('profile.show', compact('user', 'addresses'));
     }
 
     /**

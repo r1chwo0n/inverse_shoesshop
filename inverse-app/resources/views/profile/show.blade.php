@@ -51,10 +51,44 @@
                     <h3 class="font-semibold text-gray-900">{{ __('Address Information') }}</h3>
                     <p>{{ __('Your address information will be displayed here.') }}</p>
                     <div class="max-w-xl mt-6">
-                    <x-primary-button as="a" href="{{ route('addresses.create') }}">
-                        {{ __('Add New Address') }}
-                    </x-primary-button>
+                    <div class="flex flex-wrap gap-4">
+                        @foreach ($addresses as $address)
+                            <div class="w-full sm:w-1/2 bg-white shadow-md rounded-lg p-4 flex-1 flex-col justify-between h-64"> <!-- Set a fixed height -->
+                                <div>
+                                    <p><strong>Address Line 1:</strong> {{ $address->address_line_1 }}</p>
+                                    <p><strong>Address Line 2:</strong> {{ $address->address_line_2 }}</p>
+                                    <p><strong>Address Line 3:</strong> {{ $address->address_line_3 }}</p>
+                                    <p><strong>Subdistrict:</strong> {{ $address->subdistrict }}</p>
+                                    <p><strong>District:</strong> {{ $address->district }}</p>
+                                    <p><strong>Province:</strong> {{ $address->province }}</p>
+                                    <p><strong>Postal Code:</strong> {{ $address->postal_code }}</p>
+                                </div>
+
+                                <!-- Edit and Delete buttons -->
+                                <div class="mt-auto flex justify-end gap-2"> <!-- Use mt-auto to push this to the bottom -->
+                                    <x-primary-button as="a" href="{{ route('addresses.edit', $address) }}">
+                                        {{ __('Edit') }}
+                                    </x-primary-button>
+                                    <form action="{{ route('addresses.destroy', $address) }}" method="POST" onsubmit="return confirm('Are you sure?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <x-danger-button type="submit" class="text-red-600 hover:text-red-800">Delete</x-danger-button>
+                                    </form>
+                                </div>
+                            </div>
+                        @endforeach
+
+                        <!-- Grayed-Out Box for Adding New Address -->
+                        @if ($addresses->count() < 2)
+                        <div class="flex-1 w-full sm:w-1/2 bg-gray-100 shadow-md rounded-lg p-4 flex items-center justify-center">
+                            <a href="{{ route('addresses.create') }}" class="text-gray-600 hover:text-gray-800 font-semibold">
+                                Add New Address
+                            </a>
+                        </div>
+                        @endif
+                    </div>
                 </div>
+
                 </div>
             </div>
 

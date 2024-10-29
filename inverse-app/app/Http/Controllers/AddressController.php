@@ -9,9 +9,11 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 use Illuminate\Validation\Rules;
+use App\Http\Requests\AddressUpdateRequest;
 
 class AddressController extends Controller
 {
+
     public function create()
     {
         // return view('addresses.create');
@@ -42,36 +44,32 @@ class AddressController extends Controller
 
     public function edit(Address $address)
     {
-        $this->authorize('update', $address);
+        // $this->authorize('update', $address);
         return view('addresses.edit', compact('address'));
     }
 
-    public function update(Request $request, Address $address)
+    public function update(AddressUpdateRequest $request, $id): RedirectResponse
     {
-        $this->authorize('update', $address);
+        // Find the address by ID
+        $address = Address::findOrFail($id);
 
-        $request->validate([
-            'address_line_1' => 'required|string|max:255',
-            'address_line_2' => 'nullable|string|max:255',
-            'address_line_3' => 'nullable|string|max:255',
-            'street' => 'nullable|string|max:255',
-            'subdistrict' => 'required|string|max:255',
-            'district' => 'required|string|max:255',
-            'province' => 'required|string|max:255',
-            'country' => 'required|string|max:255',
-            'postal_code' => 'required|string|max:10',
-        ]);
+        // Fill the address with validated data
+        $address->fill($request->validated());
 
-        $address->update($request->all());
+        // Save the updated address
+        $address->save();
 
-        return redirect()->route('profile.show')->with('status', 'Address updated successfully');
+        return Redirect::route('profile.show')->with('status', 'Address updated successfully');
     }
 
     public function destroy(Address $address)
     {
-        $this->authorize('delete', $address);
+        if (auth()->user()->id !== $address->user_id) {
+            return redirect()->route('profile.show')->with('error', 'Unauthorized action.');
+        }
+    
         $address->delete();
-
+    
         return redirect()->route('profile.show')->with('status', 'Address deleted successfully');
     }
 }
