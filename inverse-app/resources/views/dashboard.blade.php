@@ -1,17 +1,16 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Dashboard') }}
-        </h2>
-    </x-slot>
-
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                    {{ __("You're logged in!") }}
-                </div>
-            </div>
-        </div>
+    <div class="columns">
+        <!-- Route to whereever You like -->
+        <a href="{{ route('profile.show') }}" class="ambanner-image-block">
+            <picture>
+                <img class="ambanner-image ignore-lazy-load" data-ambanner-js="image" src="https://www.converse.co.th/media/amasty/bannerslider/DT_Banner_CVxUnDefeat-Shop.jpg" alt="">
+            </picture>
+        </a>
+    </div>
+    <div class="content-block flex flex-wrap justify-center">
+        <img src="https://www.converse.co.th/media/wysiwyg/home/trending-styles/DT_FA24_F1_V2_329x412_4.png" alt="" class="w-1/4">
+        <img src="https://www.converse.co.th/media/wysiwyg/home/trending-styles/DT_FA24_F1_V2_329x412_1.png" alt="" class="w-1/4">
+        <img src="https://www.converse.co.th/media/wysiwyg/home/trending-styles/DT_FA24_F1_V2_329x412_3_1.jpg" alt="" class="w-1/4">
+        <img src="https://www.converse.co.th/media/wysiwyg/home/trending-styles/DT_FA24_F1_V2_329x412_2.png" alt="" class="w-1/4">
     </div>
 </x-app-layout>
