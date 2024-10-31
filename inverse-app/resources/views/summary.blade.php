@@ -54,15 +54,37 @@
                     @endforeach
                 </div>
                 <hr class="my-4">
+
+                @php
+                    // คำนวณยอดรวมและส่วนลด
+                    $subtotal = $cartItems->sum(function($item) {
+                        return $item->product->price * $item->quantity;
+                    });
+                    $discount = $subtotal > 2000 ? $subtotal * 0.10 : 0;
+                    $total = $subtotal - $discount;
+                @endphp
+
                 <div class="flex justify-between">
                     <p class="text-gray-800 font-semibold">ยอดรวมสุทธิ:</p>
-                    <p class="text-lg font-bold text-gray-900">
-                        {{ number_format($cartItems->sum(function($item) {
-                            return $item->product->price * $item->quantity;
-                        }), 2) }} THB
-                    </p>
+                    <p class="text-lg font-bold text-gray-900">{{ number_format($subtotal, 2) }} THB</p>
                 </div>
-                <button class="w-full mt-4 bg-black text-white py-2 rounded-lg hover:bg-gray-800">ยืนยันการสั่งซื้อ</button>
+
+                @if ($discount > 0)
+                    <div class="flex justify-between">
+                        <p class="text-gray-800 font-semibold">ส่วนลด 10%:</p>
+                        <p class="text-lg font-bold text-gray-900">-{{ number_format($discount, 2) }} THB</p>
+                    </div>
+                @endif
+
+                <div class="flex justify-between mt-2">
+                    <p class="text-gray-800 font-semibold">ยอดรวมหลังส่วนลด:</p>
+                    <p class="text-lg font-bold text-gray-900">{{ number_format($total, 2) }} THB</p>
+                </div>
+
+                <form action="{{ route('confirm-order') }}" method="POST">
+                    @csrf
+                    <button type="submit" class="w-full mt-4 bg-black text-white py-2 rounded-lg hover:bg-gray-800">ยืนยันการสั่งซื้อ</button>
+                </form>
             </div>
         </div>
     </div>

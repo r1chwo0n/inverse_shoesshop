@@ -24,7 +24,7 @@ class CartSeeder extends Seeder
         // เพิ่มสินค้าแต่ละชิ้นลงในรถเข็นของผู้ใช้
         foreach ($products as $product) {
             Cart::create([
-                'user_id' => 2,   // ID ของผู้ใช้
+                'user_id' => 4,   // ID ของผู้ใช้
                 'product_id' => $product->id,   // ID ของสินค้า
                 'quantity' => rand(1, 5),   // กำหนดจำนวนสินค้าแบบสุ่มระหว่าง 1 ถึง 5
             ]);

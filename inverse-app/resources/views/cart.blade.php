@@ -80,7 +80,10 @@
                             </p>
                         </div>
 
-                        <a href="{{ route('summary') }}" class="w-full mt-4 bg-black text-white py-2 rounded-lg hover:bg-gray-800 text-center inline-block">ชำระเงิน</a>
+                        <form action="{{ route('summary') }}" method="GET" class="w-full mt-4">
+                            <button type="submit" class="w-full bg-black text-white py-2 rounded-lg hover:bg-gray-800 text-center inline-block">ชำระเงิน</button>
+                        </form>
+
                     </div>
                 </div>
             </div>

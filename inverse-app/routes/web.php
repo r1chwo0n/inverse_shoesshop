@@ -33,7 +33,14 @@ Route::middleware('auth')->group(function () {
     Route::post('/cart/{productId}', [CartController::class, 'store'])->name('cart.store');
     Route::put('/cart/{cartId}', [CartController::class, 'update'])->name('cart.update');
     Route::delete('/cart/{cartId}', [CartController::class, 'destroy'])->name('cart.destroy');
-    Route::get('/summary', [OrderController::class, 'summary'])->name('summary');
+    
+    Route::get('/summary', [OrderController::class, 'checkout'])->name('summary');
+
+    Route::post('/confirm-order', [OrderController::class, 'confirmOrder'])->name('confirm-order');
+    // web.php
+    Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+
+
 });
 
 
