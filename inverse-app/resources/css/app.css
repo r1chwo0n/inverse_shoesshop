@@ -1,3 +1,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+.custom-nav-link {
+    border-bottom: none !important;
+}
+
+.custom-nav-link:hover {
+    border-bottom: 2px solid black !important;
+}

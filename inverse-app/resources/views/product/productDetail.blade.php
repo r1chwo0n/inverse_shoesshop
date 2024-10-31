@@ -24,7 +24,7 @@
 
                     <!-- Total Available Stock -->
                     <p class="text-gray-600 mt-4">Total Available Stock: <span class="font-bold">{{ $product->sizes->sum('stock') }}</span></p>
-                    
+
                     <form action="{{ route('cart.add') }}" method="POST">
                         @csrf
                         <input type="hidden" name="product_id" value="{{ $product->id }}">
@@ -45,10 +45,10 @@
                         <!-- Quantity Input -->
                         <div class="flex items-center mt-4 mb-6"> 
                             <label for="quantity" class="mr-4">Quantity:</label>
-                            <input type="number" id="quantity" name="quantity" value="1" min="1" class="border border-gray-300 rounded-lg py-2 px-4 w-20 focus:outline-none focus:ring focus:ring-blue-300">
+                            <input type="number" id="quantity" name="quantity" value="1" min="0" class="border border-gray-300 rounded-lg py-2 px-4 w-20 focus:outline-none focus:ring focus:ring-blue-300">
                         </div>
                         
-                        <button type="submit" class="w-full bg-black text-white py-2 rounded-md hover:bg-gray-800 transition">
+                        <button type="submit" id="addToCartButton" class="w-full bg-black text-white py-2 rounded-md hover:bg-gray-800 transition">
                             Add to Cart
                         </button>
                     </form>
@@ -61,6 +61,7 @@
         document.addEventListener('DOMContentLoaded', function () {
             const sizeSelect = document.getElementById('size');
             const quantityInput = document.getElementById('quantity');
+            const addToCartButton = document.getElementById('addToCartButton');
 
             sizeSelect.addEventListener('change', function () {
                 const selectedOption = sizeSelect.options[sizeSelect.selectedIndex];
@@ -68,6 +69,20 @@
 
                 // Set the max value of the quantity input to the stock of the selected size
                 quantityInput.setAttribute('max', stock);
+
+                // Enable or disable the Add to Cart button based on stock
+                if (stock > 0) {
+                    quantityInput.setAttribute('min', 1);
+                    quantityInput.value = 1; // Reset quantity to 1 if there's stock
+                    addToCartButton.classList.remove('opacity-50', 'cursor-not-allowed');
+                    addToCartButton.disabled = false; // Enable button
+                } else {
+                    quantityInput.setAttribute('min', 0);
+                    quantityInput.value = 0; // Reset quantity to 0 if there's no stock
+                    addToCartButton.classList.add('opacity-50', 'cursor-not-allowed');
+                    addToCartButton.disabled = true; // Disable button
+                }
+
                 // Reset quantity if the selected stock is lower than the current value
                 if (parseInt(quantityInput.value) > stock) {
                     quantityInput.value = stock;

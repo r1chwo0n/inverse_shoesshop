@@ -15,10 +15,10 @@
             <!-- Filters Sidebar + Product Grid in a flex container -->
             <div class="flex flex-col lg:flex-row">
                 <!-- Filters Sidebar -->
-                <aside class="w-full lg:w-1/4 bg-white p-6 shadow-md rounded-lg mb-6 lg:mb-0 lg:mr-6"> 
+                <!-- <aside class="w-full lg:w-1/4 bg-white p-6 shadow-md rounded-lg mb-6 lg:mb-0 lg:mr-6"> 
                     <h3 class="font-semibold text-lg mb-4">Filter Options</h3>
-                    <!-- Add filter options here -->
-                </aside>
+                    
+                </aside> -->
 
                 <!-- Product Grid -->
                 <div class="w-full lg:w-3/4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">

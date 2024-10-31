@@ -14,10 +14,10 @@
 
             <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
                 <!-- Sidebar Filters -->
-                <div class="bg-white p-4 rounded-lg shadow-md">
+                <!-- <div class="bg-white p-4 rounded-lg shadow-md">
                     <h3 class="font-semibold text-lg mb-4">Filters</h3>
-                    <!-- Add filter options here as before -->
-                </div>
+                   
+                </div> -->
 
                 <!-- Product Grid -->
                 <div class="md:col-span-3">

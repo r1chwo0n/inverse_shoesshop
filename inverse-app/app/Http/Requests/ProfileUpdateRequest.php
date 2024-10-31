@@ -17,6 +17,11 @@ class ProfileUpdateRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
+            'firstname' => ['required', 'string', 'max:255'],
+            'lastname' => ['required', 'string', 'max:255'],
+            'phone_number' => ['required', 'string', 'max:15'],
+            'birthdate' => ['required', 'date'],
+            'gender' => ['required', 'string', 'in:male,female'], // Ensure it matches your dropdown
             'email' => [
                 'required',
                 'string',

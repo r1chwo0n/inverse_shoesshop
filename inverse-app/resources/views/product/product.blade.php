@@ -31,19 +31,17 @@
                             </li>
                         </ul>
                     </div>
-
-                    <!-- Size Filter Removed -->
                 </aside>
 
                 <!-- Product Grid -->
                 <div class="w-full lg:w-3/4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                     @foreach($products as $product)
                     <!-- Product Card -->
-                    <a href="{{ route('productDetail', $product->id) }}" class="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition transform hover:-translate-y-1 duration-200 ease-in-out">
-                        <img class="w-full h-48 object-cover" src="{{ asset('storage/'.$product->image_path) }}" alt="{{ $product->name }}">
-                        <div class="p-4 flex flex-col justify-between" style="height: 100%;">
+                    <a href="{{ route('productDetail', $product->id) }}" class="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition">
+                        <img class="w-full" src="{{ asset('storage/'.$product->image_path) }}" alt="{{ $product->name }}">
+                        <div class="p-4">
                             <h3 class="font-semibold text-lg">{{ $product->name }}</h3>
-                            <p class="text-gray-500 mt-auto">
+                            <p class="text-gray-500">
                                 <span class="text-black-500 font-bold">{{ number_format($product->price, 2) }} THB</span>
                                 @if($product->discounted_price)
                                 <span class="line-through text-gray-400">{{ number_format($product->discounted_price, 2) }} THB</span>

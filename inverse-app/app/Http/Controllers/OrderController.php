@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Auth;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Cart;
@@ -23,7 +23,28 @@ class OrderController extends Controller
         return view('summary', compact('user', 'order'));
     }
 
-    public function checkout(Request $request)
+    public function checkout()
+    {
+        $user = Auth::user();
+        $cartItems = Cart::with('product')->where('user_id', $user->id)->get();
+        $order = null; 
+
+        return view('summary', compact('user', 'cartItems', 'order'));
+        // return view('summary', compact('user', 'cartItems'));
+    }
+
+    public function index()
+    {
+        $user = Auth::user();
+        $orders = Order::where('user_id', $user->id)
+            ->with('orderItems.product')
+            ->orderBy('created_at', 'asc') // เรียงตามวันที่สร้าง
+            ->get();
+
+        return view('order', compact('orders'));
+    }
+
+    public function confirmOrder(Request $request)
     {
         $user = auth()->user();
         $cartItems = Cart::where('user_id', $user->id)->get();
@@ -35,11 +56,17 @@ class OrderController extends Controller
         $order = null;
 
         DB::transaction(function () use ($cartItems, &$order) {
+            $subtotal = $cartItems->sum(function ($item) {
+                return $item->product->price * $item->quantity;
+            });
+
+            // คำนวณส่วนลด
+            $discount = $subtotal > 2000 ? $subtotal * 0.10 : 0;
             $order = Order::create([
                 'user_id' => auth()->id(),
-                'total_price' => $cartItems->sum(function ($item) {
-                    return $item->product->price * $item->quantity;
-                }),
+                'total_price' => $subtotal,
+                'discount' => $discount,
+                'totalDiscount' => $subtotal - $discount,
             ]);
 
             foreach ($cartItems as $item) {
@@ -63,9 +90,10 @@ class OrderController extends Controller
                 ]);
             }
 
-            Cart::where('user_id', auth()->id())->delete();
+            // ลบข้อมูลใน Cart หลังจากยืนยันคำสั่งซื้อ
+            Cart::where('user_id', auth()->id())->delete();;
         });
 
-        return redirect()->route('order.summary', $order->id);
+        return redirect()->route('orders.index')->with('success', 'คำสั่งซื้อสำเร็จและเคลียร์ตะกร้าสินค้าเรียบร้อยแล้ว');
     }
 }

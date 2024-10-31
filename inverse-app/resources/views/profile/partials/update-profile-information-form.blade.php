@@ -24,6 +24,40 @@
         </div>
 
         <div>
+            <x-input-label for="firstname" :value="__('First Name')" />
+            <x-text-input id="firstname" name="firstname" type="text" class="mt-1 block w-full" :value="old('firstname', $user->firstname)" required autofocus autocomplete="firstname" />
+            <x-input-error class="mt-2" :messages="$errors->get('firstname')" />
+        </div>
+
+        <div>
+            <x-input-label for="lastname" :value="__('Last Name')" />
+            <x-text-input id="lastname" name="lastname" type="text" class="mt-1 block w-full" :value="old('lastname', $user->lastname)" required autofocus autocomplete="lastname" />
+            <x-input-error class="mt-2" :messages="$errors->get('lastname')" />
+        </div>
+
+        <div>
+            <x-input-label for="phone_number" :value="__('Phone Number')" />
+            <x-text-input id="phone_number" name="phone_number" type="text" class="mt-1 block w-full" :value="old('phone_number', $user->phone_number)" required autofocus autocomplete="phone_number" />
+            <x-input-error class="mt-2" :messages="$errors->get('phone_number')" />
+        </div>
+
+        <div>
+            <x-input-label for="birthdate" :value="__('Birthdate')" />
+            <x-text-input id="birthdate" class="block mt-1 w-full bg-gray-100 border-none focus:ring-0 focus:outline-none" type="date" name="birthdate" :value="old('birthdate', $user->birthdate)" required />
+            <!-- <div class="absolute inset-x-0 bottom-0 h-0.5 bg-black"></div> -->
+            <x-input-error :messages="$errors->get('birthdate')" />
+        </div>
+
+        <div>
+            <x-input-label for="gender" :value="__('Gender')" />
+            <select id="gender" name="gender" class="block mt-1 w-full bg-gray-100 border-none focus:ring-0 focus:outline-none px-2 py-2" required>
+                <option value="male" {{ $user->gender === 'male' ? 'selected' : '' }}>Male</option>
+                <option value="female" {{ $user->gender === 'female' ? 'selected' : '' }}>Female</option>
+            </select>
+            <x-input-error :messages="$errors->get('gender')" />
+        </div>
+
+        <div>
             <x-input-label for="email" :value="__('Email')" />
             <x-text-input id="email" name="email" type="email" class="mt-1 block w-full" :value="old('email', $user->email)" required autocomplete="username" />
             <x-input-error class="mt-2" :messages="$errors->get('email')" />
@@ -47,17 +81,13 @@
             @endif
         </div>
 
+
         <div class="flex items-center gap-4">
             <x-primary-button>{{ __('Save') }}</x-primary-button>
-
             @if (session('status') === 'profile-updated')
-                <p
-                    x-data="{ show: true }"
-                    x-show="show"
-                    x-transition
-                    x-init="setTimeout(() => show = false, 2000)"
-                    class="text-sm text-gray-600"
-                >{{ __('Saved.') }}</p>
+                <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 4000)" x-transition class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mt-4 text-center" role="alert">
+                    <span class="block sm:inline">{{ __('Profile information saved successfully!') }}</span>
+                </div>
             @endif
         </div>
     </form>

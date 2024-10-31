@@ -49,7 +49,7 @@
                                                     readonly>
                                                 <button type="button" class="bg-gray-200 px-3 py-1 rounded-lg text-gray-800" onclick="increaseQuantity({{ $item->id }}, event)">+</button>
                                             </form>
-                                            <button type="button" class="text-red-500 hover:underline" onclick="deleteItem({{ $item->id }})">ลบ</button>
+                                            <button type="button" class="text-red-500 hover:underline" onclick="deleteItem({{ $item->id }})">Delete</button>
                                         </div>
                                     </div>
                                 </div>
@@ -84,13 +84,11 @@
                             </p>
                         </div>
 
-                        <form action="{{ route('checkout') }}" method="POST">
-                            @csrf
+                        <form action="{{ route('summary') }}" method="GET">
                             <button class="w-full mt-4 bg-black text-white py-2 rounded-lg hover:bg-gray-800">
                                 Checkout
                             </button>
                         </form>
-
                     </div>
                 </div>
             </div>
