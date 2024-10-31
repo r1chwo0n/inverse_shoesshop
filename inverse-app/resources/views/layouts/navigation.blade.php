@@ -12,14 +12,40 @@
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        {{ __('Home') }}
+                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" class="custom-nav-link">
+                        {{ __('Product') }}
                     </x-nav-link>
                 </div>
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" class="custom-nav-link">
+                        {{ __('Order') }}
+                    </x-nav-link>
+                </div>
+
             </div>
 
             <!-- Right section with user and cart icons -->
             <div class="flex items-center space-x-6">
+                <!-- Cart Icon -->
+                <a href="" class="text-gray-700 hover:text-gray-900">
+                    <span class="sr-only">Cart</span>
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="25px"
+                        height="25px"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.5"
+                        viewBox="0 0 24 24"
+                        class="bi bi-cart4"
+                    >
+                        <title>Cart</title>
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 6H4a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1h1.31l1.6 6.9a2 2 0 0 0 1.96 1.6H18a2 2 0 0 0 1.97-1.7l1.21-6a1 1 0 0 0-1-1.3H7l-.34-1.4A1 1 0 0 0 6 6z" />
+                        <circle cx="10" cy="20" r="1.5" />
+                        <circle cx="18" cy="20" r="1.5" />
+                    </svg>
+                </a>
+
                 <!-- User Icon -->
                 <a href="{{ route('profile.show') }}" class="text-gray-700 hover:text-gray-900">
                     <span class="sr-only">User Profile</span>
