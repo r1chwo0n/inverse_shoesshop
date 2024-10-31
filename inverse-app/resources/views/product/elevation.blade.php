@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight text-center">
-            {{ __('Elevation Shoes') }}
+            {{ __('Elevation') }}
         </h2>
     </x-slot>
 
@@ -12,32 +12,31 @@
                 <a href="{{ route('product') }}" class="hover:underline">HOME</a> / Elevation Shoes
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <!-- Filters Sidebar + Product Grid in a flex container -->
+            <div class="flex flex-col lg:flex-row">
                 <!-- Sidebar Filters -->
-                <div class="bg-white p-4 rounded-lg shadow-md">
+                <aside class="w-full lg:w-1/4 bg-white p-6 shadow-md rounded-lg mb-6 lg:mb-0 lg:mr-6"> 
                     <h3 class="font-semibold text-lg mb-4">Filters</h3>
                     <!-- Add filter options here -->
-                </div>
+                </aside>
 
                 <!-- Product Grid -->
-                <div class="md:col-span-3">
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                        @foreach($products as $product)
-                        <!-- Product Card -->
-                        <div class="bg-white shadow-md rounded-lg overflow-hidden">
+                <div class="w-full lg:w-3/4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    @foreach($products as $product)
+                    <!-- Product Card -->
+                    <a href="{{ route('productDetail', $product->id) }}" class="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition transform hover:-translate-y-1 duration-200 ease-in-out">
                         <img class="w-full" src="{{ asset('storage/'.$product->image_path) }}" alt="{{ $product->name }}">
-                            <div class="p-4">
-                                <h3 class="font-semibold text-lg">{{ $product->name }}</h3>
-                                <p class="text-gray-500">
-                                    <span class="text-black-500 font-bold">{{ number_format($product->price, 2) }} THB</span>
-                                    @if($product->discounted_price)
-                                    <span class="line-through text-gray-400">{{ number_format($product->discounted_price, 2) }} THB</span>
-                                    @endif
-                                </p>
-                            </div>
+                        <div class="p-4">
+                            <h3 class="font-semibold text-lg">{{ $product->name }}</h3>
+                            <p class="text-gray-500">
+                                <span class="text-black-500 font-bold">{{ number_format($product->price, 2) }} THB</span>
+                                @if($product->discounted_price)
+                                <span class="line-through text-gray-400">{{ number_format($product->discounted_price, 2) }} THB</span>
+                                @endif
+                            </p>
                         </div>
-                        @endforeach
-                    </div>
+                    </a>
+                    @endforeach
                 </div>
             </div>
         </div>

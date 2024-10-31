@@ -2,6 +2,9 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\SummaryController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\CartController;
 use Illuminate\Support\Facades\Route;
 
@@ -28,11 +31,11 @@ Route::middleware('auth')->group(function () {
 
 
 
-    // Cart Routes
+    Route::get('/cart/{id}', [CartController::class, 'show'])->name('cart.show');
     Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
     
     // Add product to cart
-    Route::post('/cart', [CartController::class, 'store'])->name('cart.add');
+    Route::post('/cart', [CartController::class, 'addToCart'])->name('cart.add');
 
     
     // Update cart item
@@ -41,6 +44,10 @@ Route::middleware('auth')->group(function () {
     // Delete cart item
     Route::delete('/cart/{cartId}', [CartController::class, 'destroy'])->name('cart.destroy');
     
+
+    // Route::post('/checkout', [CheckoutController::class, 'checkout'])->name('checkout');
+    // Route::get('/summary', [SummaryController::class, 'summary'])->name('summary');
+    // Route::get('/order/summary/{order}', [OrderController::class, 'summary'])->name('order.summary');
 });
 
 // Define routes for each shoe type page
@@ -49,7 +56,19 @@ Route::get('/product/classic-chuck', [ProductController::class, 'showClassicChuc
 Route::get('/product/sport', [ProductController::class, 'showSport'])->name('sport');
 Route::get('/product/elevation', [ProductController::class, 'showElevation'])->name('elevation');
 
+// Route::get('/product', [ProductController::class, 'index'])->name('products.index');
 Route::get('/product', [ProductController::class, 'index'])->name('product');
 Route::get('/product/{id}', [ProductController::class, 'showProductDetail'])->name('productDetail');
+// Route::get('/product/{id}', [ProductController::class, 'showProductDetail'])->name('productDetail');
+
+
+// Route for the cart summary page
+// Route::get('/cart/summary', [SummaryController::class, 'summary'])->name('cart.summary');
+
+// Route for checking out (moving items to orders)
+Route::post('/checkout', [OrderController::class, 'checkout'])->name('checkout');
+
+// Route for order summary page after checkout
+Route::get('/order/summary/{orderId}', [OrderController::class, 'summary'])->name('order.summary');
 
 require __DIR__.'/auth.php';

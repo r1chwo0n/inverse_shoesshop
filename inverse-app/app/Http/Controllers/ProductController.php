@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Models\Product;
-
+use App\Models\ProductSize;
 use Illuminate\Http\Request;
 
 
@@ -10,9 +10,15 @@ class ProductController extends Controller
 {
     public function index()
     {
-        $products = Product::all(); // ดึงข้อมูลสินค้าจากฐานข้อมูล
-        return view('product.product', compact('products')); 
+        // Fetch products with sizes
+        $products = Product::with('sizes')->get(); 
+        // Get distinct sizes for filtering if needed
+        $sizes = ProductSize::distinct('size')->pluck('size'); 
+
+        return view('product.product', compact('products', 'sizes'));
     }
+
+
 
     // public function chuck70() {
     //     // Logic for the Chuck 70 page (if needed)
@@ -60,11 +66,25 @@ class ProductController extends Controller
         return view('product.elevation', compact('products'));
     }
 
+    // public function showProductDetail($id)
+    // {
+    //     $product = Product::findOrFail($id); // Fetch the product by ID
+    //     return view('product.productDetail', compact('product')); // Pass product data to the detail view
+    // }
+
     public function showProductDetail($id)
     {
-        $product = Product::findOrFail($id); // Fetch the product by ID
+        $product = Product::with('sizes')->findOrFail($id); // Ensure to load sizes
         return view('product.productDetail', compact('product')); // Pass product data to the detail view
     }
+
+
+    public function show($id)
+    {
+        $product = Product::with('sizes')->findOrFail($id);
+        return view('product.show', compact('product'));
+    }
+
 
 
     public function addToCart(Request $request, $productId)

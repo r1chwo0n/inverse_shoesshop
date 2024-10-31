@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight text-center">
-            {{ __('Chuck 70 Shoes') }}
+            {{ __('Chuck 70') }}
         </h2>
     </x-slot>
 
@@ -24,8 +24,8 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                         @foreach($products as $product)
                         <!-- Product Card -->
-                        <div class="bg-white shadow-md rounded-lg overflow-hidden">
-                        <img class="w-full" src="{{ asset('storage/'.$product->image_path) }}" alt="{{ $product->name }}">
+                        <a href="{{ route('productDetail', $product->id) }}" class="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition transform hover:-translate-y-1 duration-200 ease-in-out">
+                            <img class="w-full" src="{{ asset('storage/'.$product->image_path) }}" alt="{{ $product->name }}">
                             <div class="p-4">
                                 <h3 class="font-semibold text-lg">{{ $product->name }}</h3>
                                 <p class="text-gray-500">
@@ -35,7 +35,7 @@
                                     @endif
                                 </p>
                             </div>
-                        </div>
+                        </a>
                         @endforeach
                     </div>
                 </div>
