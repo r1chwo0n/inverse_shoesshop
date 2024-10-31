@@ -16,8 +16,11 @@ class OrderController extends Controller
         // Retrieve the order with its items
         $order = Order::with('orderItems.product')->findOrFail($orderId);
 
-        // Pass the order to the view
-        return view('summary', compact('order'));
+        // Retrieve the authenticated user
+        $user = auth()->user();
+
+        // Pass the user and order to the view
+        return view('summary', compact('user', 'order'));
     }
 
     public function checkout(Request $request)
@@ -65,5 +68,4 @@ class OrderController extends Controller
 
         return redirect()->route('order.summary', $order->id);
     }
-
 }

@@ -6,8 +6,19 @@
     </x-slot>
 
     <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white shadow-sm sm:rounded-lg p-6">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 flex">
+            <!-- Left side: User details -->
+            <div class="bg-white shadow-sm sm:rounded-lg p-6 w-2/3 mr-4">
+                <h3 class="text-lg font-semibold text-gray-800">User Information</h3>
+                <div class="mt-4">
+                    <p class="font-semibold">Name: {{ $user->firstname }} {{ $user->lastname }}</p>
+                    <p class="text-sm text-gray-600">Phone: {{ $user->phone_number }}</p>
+                    <!-- Add other user details as needed -->
+                </div>
+            </div>
+
+            <!-- Right side: Order details -->
+            <div class="bg-white shadow-sm sm:rounded-lg p-6 w-1/3">
                 <h3 class="text-lg font-semibold text-gray-800">Order Details</h3>
                 <div class="mt-4">
                     @foreach($order->orderItems as $item)
