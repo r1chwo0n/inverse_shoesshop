@@ -84,8 +84,10 @@
                             </p>
                         </div>
 
-                        <form action="{{ route('summary') }}" method="GET">
-                            <button class="w-full mt-4 bg-black text-white py-2 rounded-lg hover:bg-gray-800">
+                        <form action="{{ route('summary') }}" method="GET" onsubmit="return checkCart();">
+                            <button class="w-full mt-4 bg-black text-white py-2 rounded-lg hover:bg-gray-800 
+                                    @if($cartItems->isEmpty()) opacity-50 cursor-not-allowed @endif" 
+                                    @if($cartItems->isEmpty()) disabled @endif>
                                 Checkout
                             </button>
                         </form>
@@ -108,7 +110,6 @@
                 updateCartQuantity(cartId, quantityInput.value); 
             }
         }
-
 
         function decreaseQuantity(cartId, event) {
             event.preventDefault();
@@ -183,6 +184,15 @@
                 }
             })
             .catch(error => console.error('Error:', error));
+        }
+
+        function checkCart() {
+            const cartIsEmpty = {{ $cartItems->isEmpty() ? 'true' : 'false' }};
+            if (cartIsEmpty) {
+                alert('Your cart is empty. Please add items to your cart before checking out.');
+                return false; // Prevent the form from submitting
+            }
+            return true; // Allow the form to submit
         }
     </script>
 </x-app-layout>

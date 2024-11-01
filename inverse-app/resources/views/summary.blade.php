@@ -7,11 +7,18 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 flex">
+            <!-- Flash message -->
+            @if (session('success'))
+                <div class="mb-4 p-4 text-green-700 bg-green-100 rounded">
+                    {{ session('success') }}
+                </div>
+            @endif
+
             <!-- Left side: User details form -->
             <div class="bg-white shadow-sm sm:rounded-lg p-6 w-2/3 mr-4">
                 <h3 class="text-lg font-semibold text-gray-800">Enter Your Personal Details</h3>
 
-                <form action="{{ route('confirm-order') }}" method="POST">
+                <form action="{{ route('confirm-order') }}" method="POST" id="order-form">
                     @csrf
                     <div class="grid grid-cols-2 gap-4 mt-4">
                         <div>
@@ -31,23 +38,32 @@
 
                     <div class="mt-4">
                         <h4 class="font-semibold text-gray-700">Select Shipping Address</h4>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2">
-                            @foreach ($addresses as $address)
-                                <div class="border rounded-lg shadow-md p-4 flex items-start">
-                                    <input type="radio" id="address_{{ $address->id }}" name="address_id" value="{{ $address->id }}" class="mr-2" required>
-                                    <label for="address_{{ $address->id }}" class="flex-grow">
-                                        <h5 class="font-bold text-gray-800">Address {{ $loop->iteration }}</h5>
-                                        <p><strong>Address Line 1:</strong> {{ $address->address_line_1 }}</p>
-                                        <p><strong>Address Line 2:</strong> {{ $address->address_line_2 }}</p>
-                                        <p><strong>Address Line 3:</strong> {{ $address->address_line_3 }}</p>
-                                        <p><strong>Subdistrict:</strong> {{ $address->subdistrict }}</p>
-                                        <p><strong>District:</strong> {{ $address->district }}</p>
-                                        <p><strong>Province:</strong> {{ $address->province }}</p>
-                                        <p><strong>Postal Code:</strong> {{ $address->postal_code }}</p>
-                                    </label>
-                                </div>
-                            @endforeach
-                        </div>
+                        @if ($addresses->isEmpty())
+                            <p class="mt-2 text-gray-600">You have no saved addresses. Please add one to proceed.</p>
+                            <div class="mt-2">
+                                <a href="{{ route('addresses.create') }}" class="inline-block bg-black text-white py-2 px-4 rounded-md hover:bg-gray-800">
+                                    Add Address
+                                </a>
+                            </div>
+                        @else
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2">
+                                @foreach ($addresses as $address)
+                                    <div class="border rounded-lg shadow-md p-4 flex items-start">
+                                        <input type="radio" id="address_{{ $address->id }}" name="address_id" value="{{ $address->id }}" class="mr-2 address-radio" required>
+                                        <label for="address_{{ $address->id }}" class="flex-grow">
+                                            <h5 class="font-bold text-gray-800">Address {{ $loop->iteration }}</h5>
+                                            <p><strong>Address Line 1:</strong> {{ $address->address_line_1 }}</p>
+                                            <p><strong>Address Line 2:</strong> {{ $address->address_line_2 }}</p>
+                                            <p><strong>Address Line 3:</strong> {{ $address->address_line_3 }}</p>
+                                            <p><strong>Subdistrict:</strong> {{ $address->subdistrict }}</p>
+                                            <p><strong>District:</strong> {{ $address->district }}</p>
+                                            <p><strong>Province:</strong> {{ $address->province }}</p>
+                                            <p><strong>Postal Code:</strong> {{ $address->postal_code }}</p>
+                                        </label>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @endif
                     </div>
 
                     <div class="mt-4">
@@ -58,7 +74,9 @@
                         </div>
                     </div>
 
-                    <button type="submit" class="w-full mt-4 bg-black text-white py-2 rounded-lg hover:bg-gray-800">Confirm Order</button>
+                    <button type="submit" class="w-full mt-4 bg-gray-400 text-white py-2 rounded-lg hover:bg-gray-500" id="confirm-order-btn" disabled>
+                        Confirm Order
+                    </button>
                 </form>
             </div>
 
@@ -84,7 +102,7 @@
                     $subtotal = $cartItems->sum(function($item) {
                         return $item->product->price * $item->quantity;
                     });
-                    $discount = $subtotal > 2000 ? $subtotal * 0.10 : 0;
+                    $discount = $subtotal > 5000 ? $subtotal * 0.10 : 0;
                     $total = $subtotal - $discount;
                 @endphp
 
@@ -107,4 +125,20 @@
             </div>
         </div>
     </div>
+
+    <script>
+        // JavaScript to enable the Confirm Order button when an address is selected
+        const addressRadios = document.querySelectorAll('.address-radio');
+        const confirmOrderBtn = document.getElementById('confirm-order-btn');
+
+        addressRadios.forEach(radio => {
+            radio.addEventListener('change', function() {
+                confirmOrderBtn.disabled = !this.checked; // Enable button if this radio is checked
+                confirmOrderBtn.classList.toggle('bg-gray-400', confirmOrderBtn.disabled);
+                confirmOrderBtn.classList.toggle('hover:bg-gray-500', confirmOrderBtn.disabled);
+                confirmOrderBtn.classList.toggle('bg-black', !confirmOrderBtn.disabled);
+                confirmOrderBtn.classList.toggle('hover:bg-gray-800', !confirmOrderBtn.disabled);
+            });
+        });
+    </script>
 </x-app-layout>

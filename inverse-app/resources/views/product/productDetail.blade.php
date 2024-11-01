@@ -25,7 +25,17 @@
                     <!-- Total Available Stock -->
                     <p class="text-gray-600 mt-4">Total Available Stock: <span class="font-bold">{{ $product->sizes->sum('stock') }}</span></p>
 
-                    <form action="{{ route('cart.add') }}" method="POST">
+                    <!-- Flash Message for Successful Addition -->
+                    <div id="flashMessage" class="hidden mb-4 p-4 bg-green-100 text-green-700 rounded-md">
+                        Product added to cart successfully!
+                    </div>
+
+                    <!-- Out of Stock Message -->
+                    <div id="outOfStockMessage" class="hidden mb-4 p-4 bg-red-100 text-red-700 rounded-md">
+                        This size is out of stock!
+                    </div>
+
+                    <form id="addToCartForm">
                         @csrf
                         <input type="hidden" name="product_id" value="{{ $product->id }}">
 
@@ -48,7 +58,7 @@
                             <input type="number" id="quantity" name="quantity" value="1" min="0" class="border border-gray-300 rounded-lg py-2 px-4 w-20 focus:outline-none focus:ring focus:ring-blue-300">
                         </div>
                         
-                        <button type="submit" id="addToCartButton" class="w-full bg-black text-white py-2 rounded-md hover:bg-gray-800 transition">
+                        <button type="submit" id="addToCartButton" class="w-full bg-black text-white py-2 rounded-md hover:bg-gray-800 transition opacity-50 cursor-not-allowed" disabled>
                             Add to Cart
                         </button>
                     </form>
@@ -61,7 +71,10 @@
         document.addEventListener('DOMContentLoaded', function () {
             const sizeSelect = document.getElementById('size');
             const quantityInput = document.getElementById('quantity');
+            const addToCartForm = document.getElementById('addToCartForm');
             const addToCartButton = document.getElementById('addToCartButton');
+            const flashMessage = document.getElementById('flashMessage');
+            const outOfStockMessage = document.getElementById('outOfStockMessage');
 
             sizeSelect.addEventListener('change', function () {
                 const selectedOption = sizeSelect.options[sizeSelect.selectedIndex];
@@ -76,16 +89,58 @@
                     quantityInput.value = 1; // Reset quantity to 1 if there's stock
                     addToCartButton.classList.remove('opacity-50', 'cursor-not-allowed');
                     addToCartButton.disabled = false; // Enable button
+                    outOfStockMessage.classList.add('hidden'); // Hide out of stock message
                 } else {
                     quantityInput.setAttribute('min', 0);
                     quantityInput.value = 0; // Reset quantity to 0 if there's no stock
                     addToCartButton.classList.add('opacity-50', 'cursor-not-allowed');
                     addToCartButton.disabled = true; // Disable button
+                    outOfStockMessage.classList.remove('hidden'); // Show out of stock message
                 }
 
                 // Reset quantity if the selected stock is lower than the current value
                 if (parseInt(quantityInput.value) > stock) {
                     quantityInput.value = stock;
+                }
+            });
+
+            // AJAX form submission
+            addToCartForm.addEventListener('submit', function (event) {
+                event.preventDefault(); // Prevent default form submission
+
+                // Check if a size is selected
+                if (sizeSelect.value === "") {
+                    alert('Please select a size before adding to cart.'); // Alert the user
+                } else {
+                    // Create FormData object
+                    const formData = new FormData(addToCartForm);
+
+                    // Send AJAX request
+                    fetch("{{ route('cart.add') }}", {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            // Show the flash message
+                            flashMessage.classList.remove('hidden');
+
+                            // Hide the message after 2 seconds
+                            setTimeout(() => {
+                                flashMessage.classList.add('hidden');
+                            }, 2000); // Display for 2 seconds
+                        } else {
+                            // Handle error response
+                            alert('Failed to add product to cart.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('An error occurred while adding to cart.');
+                    });
                 }
             });
         });
