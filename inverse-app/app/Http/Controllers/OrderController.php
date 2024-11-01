@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use Auth;
 use App\Models\Order;
+use App\Models\Address;
 use App\Models\OrderItem;
 use App\Models\Cart;
 use App\Models\ProductSize;
@@ -19,6 +20,7 @@ class OrderController extends Controller
         // Retrieve the authenticated user
         $user = auth()->user();
 
+
         // Pass the user and order to the view
         return view('summary', compact('user', 'order'));
     }
@@ -28,8 +30,10 @@ class OrderController extends Controller
         $user = Auth::user();
         $cartItems = Cart::with('product')->where('user_id', $user->id)->get();
         $order = null; 
+        // Retrieve user addresses
+        $addresses = Address::where('user_id', $user->id)->get();
 
-        return view('summary', compact('user', 'cartItems', 'order'));
+        return view('summary', compact('user', 'cartItems', 'order', 'addresses'));
         // return view('summary', compact('user', 'cartItems'));
     }
 
